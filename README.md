@@ -1,4 +1,4 @@
-# CRDA - Causal Residual Data Augmentation
+# CRDA - Counterfactual Residual Data Augmentation
 
 [![PyPI version](https://badge.fury.io/py/crda.svg)](https://badge.fury.io/py/crda)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
@@ -269,7 +269,7 @@ The dataset is automatically preprocessed (unless `skip_preprocess=True`):
 
 ### CRDA
 
-The main class for running causal residual data augmentation.
+The main class for running counterfactual residual data augmentation.
 
 ```python
 from crda import CRDA, Config
@@ -406,7 +406,7 @@ The `run()` method returns a pandas DataFrame with:
 
 ## Method Overview
 
-**CRDA (Causal Residual Data Augmentation)** improves regression models through:
+**CRDA (Counterfactual Residual Data Augmentation)** improves regression models through:
 
 1. **Residual Analysis**: Compute prediction residuals from baseline model
 2. **Causal Filtering**: Identify features uncorrelated with residuals and conditionally independent of target
@@ -417,6 +417,49 @@ The `run()` method returns a pandas DataFrame with:
 ### Key Innovation
 
 Unlike traditional augmentation that blindly perturbs features, CRDA uses causal reasoning to select features that can be safely modified without corrupting the underlying data generating process (keeping residuals invariant).
+
+---
+
+## Differences from the Paper
+
+This package is a reference implementation of CRDA but it diverges from the ICML 2026 paper (Mohebbi et al., 2026) in two principled ways. The core algorithm — residual reuse `y'_i = ĝ(x'_i) + ẑ_i` and the Wilcoxon signed-rank safety gate — is identical.
+
+### 1. Different Independence Filter
+
+The paper uses a two-stage screen over `{X, Y, Z}`:
+
+1. PC algorithm to remove features with a direct edge to the residual `Z`
+2. Pearson correlation check vs. `Z`
+
+The package **replaces** this with a *per-feature marginal independence test* against the residual:
+
+- **Continuous features:** distance correlation (`hyppo.independence.Dcorr`) with 1000 permutations
+- **Categorical features:** mutual information (`sklearn.feature_selection.mutual_info_regression`) with a 1000-permutation null distribution
+
+Features are ranked by p-value, most independent first. The acceptance threshold is controlled by `Config.indep_test_threshold` (default `0.05`).
+
+**Why:**
+
+- Distance correlation captures non-linear dependence that Pearson misses.
+- A direct per-feature test avoids the PC algorithm's computational cost and its brittleness under hidden confounders — a failure mode the paper itself flags in its Limitations section.
+- A clean p-value gives a principled way to rank candidate perturbable features.
+
+### 2. Type-Aware Perturbation
+
+The paper's intervention is purely multiplicative scaling, `x'_P = x_P · (1 + δ)`, which is only defined for continuous numeric features. The package branches on feature type:
+
+- **Continuous features:** the paper's `(1 + δ)` rule, with `δ ∼ Uniform[min_perturb_percent, max_perturb_percent]`
+- **One-hot-encoded categorical features:** uniform category resampling — draw a different category uniformly at random, with collision handling so the value is guaranteed to change
+
+**Why:** many real tabular datasets contain categorical columns, and the paper's scaling rule is undefined on one-hot vectors. Making the perturbation type-aware lets CRDA cover broader tabular data without falling back to ad-hoc encoding tricks.
+
+### What's Identical
+
+- The additive-noise decomposition `Y = g(X) + Z` and the residual-invariance assumption `Pr(Z | X_P, X_R) = Pr(Z | X_R)`
+- The residual-reuse construction `y'_i = ĝ(x'_i) + ẑ_i`
+- The Wilcoxon signed-rank safety gate that decides whether to commit the augmentation
+
+For the exact paper pipeline and experiments, see the [research repository](https://github.com/mhmohebbi/CRDA).
 
 ---
 
@@ -458,7 +501,7 @@ If you use CRDA in your research, please cite:
 ```bibtex
 @software{crda2026,
   author = {Mohebbi, Hossein},
-  title = {CRDA: Causal Residual Data Augmentation for Regression},
+  title = {CRDA: Counterfactual Residual Data Augmentation for Regression},
   year = {2026},
   url = {https://github.com/mhmohebbi/CRDA-package}
 }
