@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "crda"
-version = "1.0.0"
+version = "1.0.1"
 description = "Causal Residual Data Augmentation for Regression - A novel data augmentation methodology that improves regression model performance through residual-guided feature perturbation"
 readme = "README.md"
 license = {text = "MIT"}
