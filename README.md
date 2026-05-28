@@ -409,14 +409,14 @@ The `run()` method returns a pandas DataFrame with:
 **CRDA (Counterfactual Residual Data Augmentation)** improves regression models through:
 
 1. **Residual Analysis**: Compute prediction residuals from baseline model
-2. **Causal Filtering**: Identify features uncorrelated with residuals and conditionally independent of target
+2. **Independence Filtering**: Identify features uncorrelated with residuals and conditionally independent of target
 3. **Selective Perturbation**: Perturb filtered features to create interventional data
 4. **Counterfactual Targets**: Generate targets using residual patterns
 5. **Augmented Training**: Train new model on combined original + augmented data
 
 ### Key Innovation
 
-Unlike traditional augmentation that blindly perturbs features, CRDA uses causal reasoning to select features that can be safely modified without corrupting the underlying data generating process (keeping residuals invariant).
+Unlike traditional augmentation that blindly perturbs features, CRDA is inspired by counterfactual reasoning to select features that can be safely modified without corrupting the underlying data generating process (keeping residuals invariant).
 
 ---
 
@@ -499,10 +499,10 @@ MIT License - see [LICENSE](LICENSE) for details.
 If you use CRDA in your research, please cite:
 
 ```bibtex
-@software{crda2026,
-  author = {Mohebbi, Hossein},
-  title = {CRDA: Counterfactual Residual Data Augmentation for Regression},
-  year = {2026},
-  url = {https://github.com/mhmohebbi/CRDA-package}
+@inproceedings{mohebbi2026crda,
+  title     = {Counterfactual Residual Data Augmentation for Regression},
+  author    = {Mohebbi, Hossein and Schulte, Oliver and Li, Ke and Poupart, Pascal},
+  booktitle = {Proceedings of the 43rd International Conference on Machine Learning (ICML)},
+  year      = {2026}
 }
 ```
