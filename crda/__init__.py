@@ -48,7 +48,7 @@ Attributes:
     __version__: Package version string.
 """
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 from crda.crda import CRDA
 from crda.utils.config import Config
