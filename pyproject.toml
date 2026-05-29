@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "crda"
-version = "1.0.1"
-description = "Causal Residual Data Augmentation for Regression - A novel data augmentation methodology that improves regression model performance through residual-guided feature perturbation"
+version = "1.0.2"
+description = "Counterfactual Residual Data Augmentation for Regression - A novel data augmentation methodology that improves regression model performance through residual-guided feature perturbation"
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.8"
@@ -19,6 +19,7 @@ keywords = [
     "machine-learning",
     "data-augmentation",
     "regression",
+    "counterfactual-reasoning",
     "causal-inference",
     "scikit-learn",
     "deep-learning"
