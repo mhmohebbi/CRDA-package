@@ -2,6 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/crda.svg)](https://badge.fury.io/py/crda)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/crda?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=GREEN&left_text=downloads)](https://pepy.tech/projects/crda)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **A novel data augmentation methodology that improves regression model performance by generating informed synthetic training examples through residual-guided feature perturbation.**
